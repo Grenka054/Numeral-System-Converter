@@ -59,8 +59,8 @@ std::string translate(std::string num, int b, int c) { //b - нач   c - кон
 				for (int i{ 0 }; i < inputIntegerPart.size(); ++i) {
 					decIntegerPart *= b;
 					(inputIntegerPart[i] < 58) ?
-						decIntegerPart += inputIntegerPart[i] - '0' :
-						decIntegerPart += inputIntegerPart[i] - 55;
+						decIntegerPart += (inputIntegerPart[i] - '0') :
+						decIntegerPart += (inputIntegerPart[i] - 55);
 				}
 			}
 			//Дробная часть
