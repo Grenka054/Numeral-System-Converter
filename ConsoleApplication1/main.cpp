@@ -27,8 +27,8 @@ std::string translate(std::string num, int b, int c) { //b - нач   c - кон
 	for (int i{ 0 }; i < num.size(); ++i) {
 		if (num[i] - '0' >= b || //Цифра должна быть меньше основания
 				(num[i] < 46 || num[i] == 47 || (num[i] > 57 && num[i] < 65) || num[i] > 90)) {
-			if (num[i] > 96 && num[i] < 123) { //uppercase
-				num[i] -= 32;
+			if (num[i] > 96 && num[i] < 123) { 
+				num[i] -= 32; //uppercase
 					continue;
 			}
 			noError = false;
