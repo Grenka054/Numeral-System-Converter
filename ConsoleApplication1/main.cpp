@@ -50,7 +50,7 @@ std::string translate(std::string num, int b, int c) { //b - нач   c - кон
 			++counter;
 		}
 
-		unsigned long long decIntegerPart{ stoull(inputIntegerPart) }; //Число в десятичной форме
+		long long decIntegerPart{ stoll(inputIntegerPart) }; //Число в десятичной форме
 		double decRealPart{ stod(inputRealPartString) }; //Дробная часть
 		//В 10-чную---------------------
 		if (b != 10) {
@@ -60,14 +60,14 @@ std::string translate(std::string num, int b, int c) { //b - нач   c - кон
 			if (inputIntegerPart.size() > 0) {
 				for (int i{ 0 }; i < inputIntegerPart.size(); ++i) {
 					decIntegerPart *= b;
-					(inputIntegerPart[i] < 55) ?
+					(inputIntegerPart[i] < '55') ?
 						decIntegerPart += inputIntegerPart[i] - '0' :
 						decIntegerPart += inputIntegerPart[i] - 55;
 				}
 			}
 		//Дробная часть
 			for (int i{ (int)inputRealPartString.size() - 1 }; i > 1; --i) {
-				(inputRealPartString[i] < 55) ?
+				(inputRealPartString[i] < '55') ?
 				decRealPart = double(decRealPart + inputRealPartString[i] - '0') / b :
 					decRealPart = double(decRealPart + inputRealPartString[i] - 55) / b;
 			}
@@ -79,11 +79,11 @@ std::string translate(std::string num, int b, int c) { //b - нач   c - кон
 		vector<char> finNum; //Финальное число как массив символов
 		integerPart = to_string(decIntegerPart);
 		int numeral{ 0 }; //цифра итогового цисла
-		for (int i{ 0 }; stoull(integerPart) > 0; ++i) {
-			numeral = stoull(integerPart) % c;
+		for (int i{ 0 }; stoll(integerPart) > 0; ++i) {
+			numeral = stoll(integerPart) % c;
 			(numeral < 10) ? finNum.push_back((numeral) + '0') :
 				finNum.push_back((numeral) + 55); //Буквы
-			integerPart = to_string(stoull(integerPart) / c);
+			integerPart = to_string(stoll(integerPart) / c);
 		}
 		reverse(finNum.begin(), finNum.end()); //Переворачиваем массив
 		string str(finNum.begin(), finNum.end()); //Vector to String
@@ -155,7 +155,6 @@ int main() {
 		int number = 11;
 		//cout << fibonacci(number) << endl;
 		//cout << fibonacciRec(number - 1);
-		cout << "Enter a Number";
 		cout << "350.ff\t16 -> 32\t= " << translate("350.ff", 16, 32) << endl;
 		cout << "80\t10 -> 8\t= " << translate("80", 10, 8) << endl;
 		cout << "-80\t10 -> 2\t= " << translate("-80", 10, 2) << endl;
@@ -177,7 +176,7 @@ int main() {
 		cout << "35.246\t7 -> 10\t= " << translate("35.246", 7, 10) << endl;
 		cout << "35.817\t9 -> 10\t= " << translate("35.817", 9, 10) << endl;
 		cout << "45.5\t6 -> 4\t= " << translate("45.5", 6, 4) << endl;
-		cout << "55.5\t6 -> 4\t= " << translate("55.5", 6, 4) << endl;
+		cout << "55.5\t6 -> 4\t= " << translate("88888888.8888", 32, 2) << endl;
 		break;
 	}
 	default: {break; }
