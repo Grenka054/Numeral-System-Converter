@@ -50,27 +50,30 @@ std::string translate(std::string num, int b, int c) { //b - нач   c - кон
 			++counter;
 		}
 
-		long long decIntegerPart{ stoll(inputIntegerPart) }; //Число в десятичной форме
-		double decRealPart{ stod(inputRealPartString) }; //Дробная часть
+		long long decIntegerPart{ 0 }; //Число в десятичной форме
+		double decRealPart{ 0 }; //Дробная часть
 		//В 10-чную---------------------
 		if (b != 10) {
-			decIntegerPart = 0;
-			decRealPart = 0;
 			//Целая часть
 			if (inputIntegerPart.size() > 0) {
 				for (int i{ 0 }; i < inputIntegerPart.size(); ++i) {
 					decIntegerPart *= b;
-					(inputIntegerPart[i] < '55') ?
+					(inputIntegerPart[i] < 58) ?
 						decIntegerPart += inputIntegerPart[i] - '0' :
 						decIntegerPart += inputIntegerPart[i] - 55;
 				}
 			}
-		//Дробная часть
+			//Дробная часть
 			for (int i{ (int)inputRealPartString.size() - 1 }; i > 1; --i) {
-				(inputRealPartString[i] < '55') ?
-				decRealPart = double(decRealPart + inputRealPartString[i] - '0') / b :
+				if (inputRealPartString[i] < 58)
+					decRealPart = double(decRealPart + inputRealPartString[i] - '0') / b;
+				else
 					decRealPart = double(decRealPart + inputRealPartString[i] - 55) / b;
 			}
+		}
+		else {
+			decIntegerPart = stoll(inputIntegerPart); //Число в десятичной форме
+			decRealPart = stod(inputRealPartString); //Дробная часть
 		}
 
 		//Из 10-чной---------------------
@@ -97,7 +100,7 @@ std::string translate(std::string num, int b, int c) { //b - нач   c - кон
 				(numeral < 10) ?
 					str += to_string(numeral) :
 					str += (char)numeral + 55; //Буквы
-				decRealPart = (decRealPart - trunc(decRealPart));
+				decRealPart = (decRealPart - trunc(decRealPart)); //Отделение дробной части от числа
 				if (decRealPart == 0.0)
 					break;
 			}
@@ -126,11 +129,11 @@ void main3() {
 	std::cout << "Enter Number: ";
 	std::string number{ "" };
 	std::getline(std::cin, number);
-	std::cout << "Enter intial Numeral System: ";
+	std::cout << "Enter intial Numeral System ( 1 < n < 37 ): ";
 	int initial{ 0 };
 	std::cin >> initial;
 	std::cin.get();
-	std::cout << "Enter final Numeral System: ";
+	std::cout << "Enter final Numeral System ( 1 < n < 37 ): ";
 	int final{ 0 };
 	std::cin >> final;
 	std::cin.get();
@@ -151,10 +154,13 @@ int main() {
 	case 1: {main1(); break; }
 	case 2: {main2(); break; }
 	case 3: {main3(); break; }
-	case 0: {
+	case 0: { //Быстрый тест конвертера
 		int number = 11;
 		//cout << fibonacci(number) << endl;
 		//cout << fibonacciRec(number - 1);
+		cout << "88888888.8888\t36 -> 2\t= " << translate("88888888.8888", 36, 2) << endl;
+		cout << "35.817\t9 -> 10\t= " << translate("35.817", 9, 10) << endl;
+		cout << "68.5z\t36 -> 6\t= " << translate("68.5z", 36, 6) << endl;
 		cout << "350.ff\t16 -> 32\t= " << translate("350.ff", 16, 32) << endl;
 		cout << "80\t10 -> 8\t= " << translate("80", 10, 8) << endl;
 		cout << "-80\t10 -> 2\t= " << translate("-80", 10, 2) << endl;
@@ -174,9 +180,7 @@ int main() {
 		cout << "350FF\t16 -> 32\t= " << translate("350FF", 16, 32) << endl;
 		cout << "350.FF\t16 -> 32\t= " << translate("350.FF", 16, 32) << endl;
 		cout << "35.246\t7 -> 10\t= " << translate("35.246", 7, 10) << endl;
-		cout << "35.817\t9 -> 10\t= " << translate("35.817", 9, 10) << endl;
 		cout << "45.5\t6 -> 4\t= " << translate("45.5", 6, 4) << endl;
-		cout << "55.5\t6 -> 4\t= " << translate("88888888.8888", 32, 2) << endl;
 		break;
 	}
 	default: {break; }
