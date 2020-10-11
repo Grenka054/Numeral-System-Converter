@@ -58,16 +58,16 @@ std::string translate(std::string num, int b, int c) { //b - нач   c - кон
 			if (inputIntegerPart.size() > 0) {
 				for (int i{ 0 }; i < inputIntegerPart.size(); ++i) {
 					decIntegerPart *= b;
-					(inputIntegerPart[i] < 58) ?
+					(inputIntegerPart[i] <= '9') ?
 						decIntegerPart += (inputIntegerPart[i] - '0') :
 						decIntegerPart += (inputIntegerPart[i] - 55);
+					//55 - разница между кодом буквы и её значением
 				}
 			}
 			//Дробная часть
 			for (int i{ (int)inputRealPartString.size() - 1 }; i > 1; --i) {
-				if (inputRealPartString[i] < 58)
-					decRealPart = double(decRealPart + inputRealPartString[i] - '0') / b;
-				else
+				decRealPart = (inputRealPartString[i] <= '9') ?
+					double(decRealPart + inputRealPartString[i] - '0') / b:
 					decRealPart = double(decRealPart + inputRealPartString[i] - 55) / b;
 			}
 		}
@@ -91,21 +91,37 @@ std::string translate(std::string num, int b, int c) { //b - нач   c - кон
 		(decIntegerPart == 0) ? finNum.push_back('0') :
 				reverse(finNum.begin(), finNum.end()); //Переворачиваем массив
 		string str(finNum.begin(), finNum.end()); //Vector to String
-
+		string strReal{ "" };
 		//Дробная часть
+
+		//Округлили
+		bool isRounded{ false };
 		if (decRealPart > 0) {
-			str += '.';
-			for (int i{ 0 }; i < 15; ++i) { //Если делится бесконечно - округлять
+			isRounded = true;
+			for (int i{ 0 }; i < 15; ++i) { //Если делится бесконечно - округлять до 15 знаков
 				decRealPart *= c;
 				numeral = (int)trunc(decRealPart);
 				(numeral < 10) ?
-					str += to_string(numeral) :
-					str += (char)numeral + 55; //Буквы
+					strReal += to_string(numeral) :
+					strReal += (char)numeral + 55; //Буквы
 				decRealPart = (decRealPart - trunc(decRealPart)); //Отделение дробной части от числа
-				if (decRealPart == 0.0)
+				if (decRealPart == 0.0) {
+					isRounded = false;
 					break;
+				}
 			}
 		}
+		for (int i{ (int)strReal.size() - 1 }; i >= 0; --i) { //Удаление лишних нулей
+			if (strReal[i] == '0') {
+				strReal.erase(i, '0');
+			}
+			else { break; }
+		}
+		if (strReal != "") { //Если есть дробная часть, отделяем точкой
+			str += '.';
+		}
+		//Если округлили, то стави знак тильды
+		isRounded ? str = '~' + str + strReal : str += strReal;
 		return str;
 	}
 	return "Error";
@@ -147,7 +163,7 @@ int main() {
 	cout << "Enter Task:\n" <<
 		"1) Fibbonacci (circle)\n" <<
 		"2) Fibbonacci (recursion)\n" <<
-		"3) Numeral System Converter\n";
+		"3) Numeral System Converter (error after 15 decimal places)\n";
 	int taskNum{ 0 };
 	cin >> taskNum;
 	cin.get();
@@ -159,27 +175,27 @@ int main() {
 		int number = 11;
 		//cout << fibonacci(number) << endl;
 		//cout << fibonacciRec(number - 1);
-		cout << "0.0000000000000001\t8 -> 2\t\t= " << translate("0.0000000000000001", 8, 2) << endl;
+		cout << "0.0000000000000001\t8 -> 2\t= " << translate("0.0000000000000001", 8, 2) << endl;
 		cout << "0\t8 -> 10\t\t= " << translate("0", 8, 10) << endl; 
-		cout << "88888888.8888\t36 -> 2\t\t= " << translate("88888888.8888", 36, 2) << endl;
+		cout << "88888888.8888\t36 -> 2\t= " << translate("88888888.8888", 36, 2) << endl;
 		cout << "35.817\t9 -> 10\t\t= " << translate("35.817", 9, 10) << endl;
 		cout << "68.5z\t36 -> 6\t\t= " << translate("68.5z", 36, 6) << endl;
-		cout << "350.ff\t16 -> 32\t\t= " << translate("350.ff", 16, 32) << endl;
+		cout << "350.ff\t16 -> 32\t= " << translate("350.ff", 16, 32) << endl;
 		cout << "80\t10 -> 8\t\t= " << translate("80", 10, 8) << endl;
 		cout << "-80\t10 -> 2\t\t= " << translate("-80", 10, 2) << endl;
 		cout << "80\t10 -> 2\t\t= " << translate("80", 10, 2) << endl;
 		cout << "80\t10 -> 1\t\t= " << translate("80", 10, 1) << endl;
-		cout << "80\t10 -> 10\t\t= " << translate("80", 10, 10) << endl;
+		cout << "80\t10 -> 10\t= " << translate("80", 10, 10) << endl;
 		cout << "85\t6 -> 8\t\t= " << translate("85", 6, 8) << endl;
 		cout << "35\t6 -> 8\t\t= " << translate("35", 6, 8) << endl;
 		cout << "32.259\t10 -> 8\t\t= " << translate("35.259", 10, 8) << endl;
-		cout << "35.200000087\t10 -> 8\t\t= " << translate("35.200000087", 10, 8) << endl;
+		cout << "35.200000087\t10 -> 8\t= " << translate("35.200000087", 10, 8) << endl;
 		cout << "35.29\t10 -> 5\t\t= " << translate("35.29", 10, 5) << endl;
 		cout << "35.29\t6 -> 10\t\t= " << translate("35.29", 6, 10) << endl;
-		cout << "35D\t16 -> 10\t\t= " << translate("35D", 16, 10) << endl;
+		cout << "35D\t16 -> 10\t= " << translate("35D", 16, 10) << endl;
 		cout << "35D.F\t16 -> 8\t\t= " << translate("35D.F", 16, 8) << endl;
 		cout << "350\t8 -> 16\t\t= " << translate("350", 8, 16) << endl;
-		cout << "350FF\t16 -> 32\t\t= " << translate("350FF", 16, 32) << endl;
+		cout << "350FF\t16 -> 32\t= " << translate("350FF", 16, 32) << endl;
 		cout << "35.246\t7 -> 10\t\t= " << translate("35.246", 7, 10) << endl;
 		cout << "45.5\t6 -> 4\t\t= " << translate("45.5", 6, 4) << endl;
 		break;
