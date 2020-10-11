@@ -88,13 +88,14 @@ std::string translate(std::string num, int b, int c) { //b - нач   c - кон
 				finNum.push_back((numeral) + 55); //Буквы
 			integerPart = to_string(stoll(integerPart) / c);
 		}
-		reverse(finNum.begin(), finNum.end()); //Переворачиваем массив
+		(decIntegerPart == 0) ? finNum.push_back('0') :
+				reverse(finNum.begin(), finNum.end()); //Переворачиваем массив
 		string str(finNum.begin(), finNum.end()); //Vector to String
 
 		//Дробная часть
 		if (decRealPart > 0) {
 			str += '.';
-			for (int i{ 0 }; i < 15; ++i) {
+			for (int i{ 0 }; i < 15; ++i) { //Если делится бесконечно - округлять
 				decRealPart *= c;
 				numeral = (int)trunc(decRealPart);
 				(numeral < 10) ?
@@ -158,6 +159,8 @@ int main() {
 		int number = 11;
 		//cout << fibonacci(number) << endl;
 		//cout << fibonacciRec(number - 1);
+		cout << "0.0000000000000001\t8 -> 2\t\t= " << translate("0.0000000000000001", 8, 2) << endl;
+		cout << "0\t8 -> 10\t\t= " << translate("0", 8, 10) << endl; 
 		cout << "88888888.8888\t36 -> 2\t\t= " << translate("88888888.8888", 36, 2) << endl;
 		cout << "35.817\t9 -> 10\t\t= " << translate("35.817", 9, 10) << endl;
 		cout << "68.5z\t36 -> 6\t\t= " << translate("68.5z", 36, 6) << endl;
@@ -167,7 +170,6 @@ int main() {
 		cout << "80\t10 -> 2\t\t= " << translate("80", 10, 2) << endl;
 		cout << "80\t10 -> 1\t\t= " << translate("80", 10, 1) << endl;
 		cout << "80\t10 -> 10\t\t= " << translate("80", 10, 10) << endl;
-		cout << "52\t8 -> 10\t\t= " << translate("52", 8, 10) << endl;
 		cout << "85\t6 -> 8\t\t= " << translate("85", 6, 8) << endl;
 		cout << "35\t6 -> 8\t\t= " << translate("35", 6, 8) << endl;
 		cout << "32.259\t10 -> 8\t\t= " << translate("35.259", 10, 8) << endl;
